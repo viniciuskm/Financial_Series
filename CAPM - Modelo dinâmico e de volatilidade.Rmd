@@ -52,7 +52,7 @@ library(BETS)
 
 ```{r}
 # Renda fixa
-Selic_Dia <- ?BETSget(code = "11")
+Selic_Dia <- BETSget(code = "11")
 rf <- xts(Selic_Dia$value*0.01, order.by = Selic_Dia$date)
 par(mfrow=c(1,1))
 plot(rf)
@@ -90,7 +90,7 @@ mercado <- mercado[index(rf)]
 # Conferindo se todas estão com mesmo número de linhas
 nrow(alpa)
 nrow(mercado)
-nrow(x)
+# nrow(x)
 
 # Correlacao
 cor(mercado, alpa)
@@ -202,7 +202,7 @@ fit = list()
 specs = list()
 AICs = matrix(NA, 16, 5)
 colnames(AICs) = c('Arch-Order', 'Garch-Order','Model', 'Distr.', 'BIC')
-rownames(AICs) = paste("Modelo", 1:64, sep = " ")
+rownames(AICs) = paste("Modelo", 1:16, sep = " ")
 dist = c('norm', 'std')
 model = c('sGARCH', 'eGARCH')
 
