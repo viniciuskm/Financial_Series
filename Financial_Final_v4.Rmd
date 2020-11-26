@@ -229,6 +229,8 @@ plot(petr[[1]], main = 'Preço PETR4.SA')
 plot(petr[[2]], main = 'Retorno PETR4.SA')
 ```
 
+
+
 ## Ações - Vale do Rio Doce
 
 ```{r importando_vale}
@@ -763,7 +765,7 @@ model = c('sGARCH', 'eGARCH')
 
 k = 1
 
-max_ordem <- 8
+max_ordem <- 2
 # Iteração para buscar o  melhor modelo GARCH para cada ativo
 for (i in 1:max_ordem){
   for (j in 1:max_ordem){
@@ -810,23 +812,23 @@ for (i in 1:max_ordem){
                                 variance.model = list(model=model[m], garchOrder=c(i,j)),
                                 distribution.model = dist[l])
 
-        fit_petr_mais[[k]] = ugarchfit(specs_petr_mais[[k]], data = petr_filtered+ibov_filtered, solver = 'hybrid')
+        fit_petr_mais[[k]] = ugarchfit(specs_petr_mais[[k]], data = petr_filtered+ibov_filtered)
 
-        fit_vale_mais[[k]] = ugarchfit(specs_vale_mais[[k]], data = vale_filtered+ibov_filtered, solver = 'hybrid')
+        fit_vale_mais[[k]] = ugarchfit(specs_vale_mais[[k]], data = vale_filtered+ibov_filtered)
 
-        fit_vvar_mais[[k]] = ugarchfit(specs_vvar_mais[[k]], data = vvar_filtered+ibov_filtered, solver = 'hybrid')
+        fit_vvar_mais[[k]] = ugarchfit(specs_vvar_mais[[k]], data = vvar_filtered+ibov_filtered)
 
-        fit_cmig_mais[[k]] = ugarchfit(specs_cmig_mais[[k]], data = cmig_filtered+ibov_filtered, solver = 'hybrid')
+        fit_cmig_mais[[k]] = ugarchfit(specs_cmig_mais[[k]], data = cmig_filtered+ibov_filtered)
         
-        fit_ibov[[k]] = ugarchfit(specs_ibov[[k]], data = ibov_filtered, solver = 'hybrid')
+        fit_ibov[[k]] = ugarchfit(specs_ibov[[k]], data = ibov_filtered)
         
-        fit_petr_menos[[k]] = ugarchfit(specs_petr_menos[[k]], data = petr_filtered-ibov_filtered, solver = 'hybrid')
+        fit_petr_menos[[k]] = ugarchfit(specs_petr_menos[[k]], data = petr_filtered-ibov_filtered)
 
-        fit_vale_menos[[k]] = ugarchfit(specs_vale_menos[[k]], data = vale_filtered-ibov_filtered, solver = 'hybrid')
+        fit_vale_menos[[k]] = ugarchfit(specs_vale_menos[[k]], data = vale_filtered-ibov_filtered)
 
-        fit_vvar_menos[[k]] = ugarchfit(specs_vvar_menos[[k]], data = vvar_filtered-ibov_filtered, solver = 'hybrid')
+        fit_vvar_menos[[k]] = ugarchfit(specs_vvar_menos[[k]], data = vvar_filtered-ibov_filtered)
 
-        fit_cmig_menos[[k]] = ugarchfit(specs_cmig_menos[[k]], data = cmig_filtered-ibov_filtered, solver = 'hybrid')
+        fit_cmig_menos[[k]] = ugarchfit(specs_cmig_menos[[k]], data = cmig_filtered-ibov_filtered)
 
         
         # Força SGARCH (1,1) NORMAL
@@ -842,16 +844,16 @@ for (i in 1:max_ordem){
         # BICs_cmig_menos[k,] = c(1,1, "sGARCH", "norm",  abs(round(infocriteria(fit_cmig_menos[[k]])[2],3)))
         
         # Guardando os dados dos modelos 'fittado'
-        BICs_petr_mais[k,] = c(i,j, model[m], dist[l],  abs(round(infocriteria(fit_petr_mais[[k]])[2],3)))
-        BICs_vale_mais[k,] = c(i,j, model[m], dist[l],  abs(round(infocriteria(fit_vale_mais[[k]])[2],3)))
-        BICs_vvar_mais[k,] = c(i,j, model[m], dist[l],  abs(round(infocriteria(fit_vvar_mais[[k]])[2],3)))
-        BICs_cmig_mais[k,] = c(i,j, model[m], dist[l],  abs(round(infocriteria(fit_cmig_mais[[k]])[2],3)))
-        BICs_ibov[k,] = c(i,j, model[m], dist[l],  abs(round(infocriteria(fit_ibov[[k]])[2],3)))
+        BICs_petr_mais[k,] = c(i,j, model[m], dist[l],  round(infocriteria(fit_petr_mais[[k]])[2],4))
+        BICs_vale_mais[k,] = c(i,j, model[m], dist[l],  round(infocriteria(fit_vale_mais[[k]])[2],4))
+        BICs_vvar_mais[k,] = c(i,j, model[m], dist[l],  round(infocriteria(fit_vvar_mais[[k]])[2],4))
+        BICs_cmig_mais[k,] = c(i,j, model[m], dist[l],  round(infocriteria(fit_cmig_mais[[k]])[2],4))
+        BICs_ibov[k,] = c(i,j, model[m], dist[l],  round(infocriteria(fit_ibov[[k]])[2],4))
 
-        BICs_petr_menos[k,] = c(i,j, model[m], dist[l],  abs(round(infocriteria(fit_petr_menos[[k]])[2],3)))
-        BICs_vale_menos[k,] = c(i,j, model[m], dist[l],  abs(round(infocriteria(fit_vale_menos[[k]])[2],3)))
-        BICs_vvar_menos[k,] = c(i,j, model[m], dist[l],  abs(round(infocriteria(fit_vvar_menos[[k]])[2],3)))
-        BICs_cmig_menos[k,] = c(i,j, model[m], dist[l],  abs(round(infocriteria(fit_cmig_menos[[k]])[2],3)))
+        BICs_petr_menos[k,] = c(i,j, model[m], dist[l],  round(infocriteria(fit_petr_menos[[k]])[2],4))
+        BICs_vale_menos[k,] = c(i,j, model[m], dist[l],  round(infocriteria(fit_vale_menos[[k]])[2],4))
+        BICs_vvar_menos[k,] = c(i,j, model[m], dist[l],  round(infocriteria(fit_vvar_menos[[k]])[2],4))
+        BICs_cmig_menos[k,] = c(i,j, model[m], dist[l],  round(infocriteria(fit_cmig_menos[[k]])[2],4))
 
         k = k + 1
 
@@ -861,16 +863,17 @@ for (i in 1:max_ordem){
 }
 
 # Encontrando o melhor modelo
-best_petr_mais <- which(BICs_petr_mais[,5] == max(BICs_petr_mais[,5]), arr.ind = TRUE)
-best_vale_mais <- which(BICs_vale_mais[,5] == max(BICs_vale_mais[,5]), arr.ind = TRUE)
-best_vvar_mais <- which(BICs_vvar_mais[,5] == max(BICs_vvar_mais[,5]), arr.ind = TRUE)
-best_cmig_mais <- which(BICs_cmig_mais[,5] == max(BICs_cmig_mais[,5]), arr.ind = TRUE)
-best_ibov <- which(BICs_ibov[,5] == max(BICs_ibov[,5]), arr.ind = TRUE)
+row_end <- length(dist)*length(model)*max_ordem*max_ordem
+best_petr_mais <- which(BICs_petr_mais[,5] == min(BICs_petr_mais[(1:row_end),5]), arr.ind = TRUE)
+best_vale_mais <- which(BICs_vale_mais[,5] == min(BICs_vale_mais[(1:row_end),5]), arr.ind = TRUE)
+best_vvar_mais <- which(BICs_vvar_mais[,5] == min(BICs_vvar_mais[(1:row_end),5]), arr.ind = TRUE)
+best_cmig_mais <- which(BICs_cmig_mais[,5] == min(BICs_cmig_mais[(1:row_end),5]), arr.ind = TRUE)
+best_ibov <- which(BICs_ibov[,5] == min(BICs_ibov[(1:row_end),5]), arr.ind = TRUE)
 
-best_petr_menos <- which(BICs_petr_menos[,5] == max(BICs_petr_menos[,5]), arr.ind = TRUE)
-best_vale_menos <- which(BICs_vale_menos[,5] == max(BICs_vale_menos[,5]), arr.ind = TRUE)
-best_vvar_menos <- which(BICs_vvar_menos[,5] == max(BICs_vvar_menos[,5]), arr.ind = TRUE)
-best_cmig_menos <- which(BICs_cmig_menos[,5] == max(BICs_cmig_menos[,5]), arr.ind = TRUE)
+best_petr_menos <- which(BICs_petr_menos[,5] == min(BICs_petr_menos[(1:row_end),5]), arr.ind = TRUE)
+best_vale_menos <- which(BICs_vale_menos[,5] == min(BICs_vale_menos[(1:row_end),5]), arr.ind = TRUE)
+best_vvar_menos <- which(BICs_vvar_menos[,5] == min(BICs_vvar_menos[(1:row_end),5]), arr.ind = TRUE)
+best_cmig_menos <- which(BICs_cmig_menos[,5] == min(BICs_cmig_menos[(1:row_end),5]), arr.ind = TRUE)
 ```
 
 
@@ -883,7 +886,7 @@ best_cmig_menos <- which(BICs_cmig_menos[,5] == max(BICs_cmig_menos[,5]), arr.in
 # BICs_cmig[best_ibov,]
 
 
-# Criando as especificações com os parâmtros definidos como melhores
+# Criando as especificações com os parâmetros definidos como melhores
 specs_petr_mais = ugarchspec(mean.model = list(armaOrder = c(arima_vet[arima_vet$acao == 'PETR+',]$p,
                                                         arima_vet[arima_vet$acao == 'PETR+',]$q)),
                                 variance.model = list(model=BICs_petr_mais[best_petr_mais,3],
@@ -1104,6 +1107,7 @@ vet_back_test <- vet_back_test %>% cbind(back_teste(tvp_beta_cmig,
 #                 Cemig = round(beta_cmig,3))
 ```
 
+
 ## Comparação dos resultados (Estático x Dinâmico)
 
 A tabela abaixo, apresenta a propoção do erro do Modelo Dinâmico em relação ao Modelo Estático. Para essa comparação foram usadas 2 métricas:
@@ -1113,7 +1117,7 @@ A tabela abaixo, apresenta a propoção do erro do Modelo Dinâmico em relação
 
 A propoção foi calculada dividindo o valor obtido no modelo dinâmico dividido pelo valor obtido no modelo estático
 $MSE={MSE_{Dinâmico} \over MSE_{Estático}}$
-
+  
 $MAE={MAE_{Dinâmico} \over MAE_{Estático}}$
 
 ```{r CAPM3}
@@ -1122,4 +1126,10 @@ $MAE={MAE_{Dinâmico} \over MAE_{Estático}}$
 vet_back_test %>% kbl() %>% kable_styling()
 
 ```
+Ações que indicam mudança de risco da empresa ao longo do tempo:
+- Petrobras: melhor desempenho do modelo Beta dinâmico em relação ao Beta estático
+- Via Varejo: possui uma melhora no erro do backtest, mas bem menos significativo
 
+Ações que o Beta varia com menos intensidade ao longo do tempo e o Beta estático produz resultado semelhante no longo prazo:
+- Vale do Rio Doce
+- Cemig
