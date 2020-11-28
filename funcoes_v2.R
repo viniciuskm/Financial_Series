@@ -2,7 +2,7 @@ library(quantmod)
 
 importa_retorno <- function(nome){
   # COletanto os Bitcoins
-  preco <- getSymbols(nome, auto.assign = F)
+  preco <- getSymbols(nome, auto.assign = F,)
   
   # Coletando somente o pre?o adjustado
   preco_adj <- preco[,ncol(preco)]
@@ -14,7 +14,6 @@ importa_retorno <- function(nome){
   # Calculando o log do retorno
   ret <- diff(log(preco_adj), lag = 1)
   ret <- ret %>% na.omit()
-  
   
   return(list(preco_adj,ret))
 }
@@ -93,3 +92,4 @@ datas_N_comuns_5 <- function(serie1,serie2,serie3,serie4,serie5){
   return(serie1_2_3_4_5)
   # return(list(serie1_filtered,serie2_filtered))
 }
+

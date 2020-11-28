@@ -1,14 +1,9 @@
 ---
 title: "Financial_Analytics - CAPM"
 author: "Guilherme, Helena, Sérgio e Vinícius"
-date: "11/19/2020"
-output: 
-  slidy_presentation: 
-    # css: Slidy2\styles\slidy.css
-    # js: Slidy2\styles\slidy.css
-    
+date: "11/27/2020"
+output: slidy_presentation
 ---
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE,warning = FALSE,
                       message = FALSE, options(scipen=999))
@@ -45,19 +40,18 @@ knitr::opts_chunk$set(echo = FALSE,warning = FALSE,
 
 ## Objetivo
 
-O objetivo dessa apresentação é analisar o valor obtido de $\beta$, do modelo CAPM para 4 diferentes ativos usando 3 diferentes métodos para obtenção desse coefientes.
+O objetivo dessa apresentação é analisar o valor obtido de $\beta$, do modelo CAPM para 4 diferentes ativos usando 4 diferentes métodos para obtenção desse coeficientes.
 
-Na análise realizada, foram comparados os $\beta s$ para diferentes ações utilizando os métodos descritos nos slides anteriores. Após o cálculo desses coeficientes foram feitas análises sobre os valores obtidos para cada ação. Essas análises foram:
+Na análise realizada, foram comparados os $\beta s$ para diferentes ações utilizando os métodos descritos nos slides a seguir. Após o cálculo desses coeficientes foram feitas análises sobre os valores obtidos para cada ação. Essas análises foram:
 
-- **Gráfica:** comparando os valores de $\beta$ para os 3 métodos ao longo do tempo
-- **Erro:** comparando os valores de $\beta$ calculados vs. os valores de $\beta$ obtidos
-- **Backtest:** comparando os valores de $\beta$ dos 3 métodos para períodos futuros 
+- **Gráfica:** comparando os valores de $\beta$ para os métodos utilizados e também entre ações com o mesmo método
+- **Erro Backtest:** comparando os valores de retorno estimados vs. os valores de retorno obtidos
 
 ## Capital Asset Pricing Model - CAPM ^1^ {.bigger}
 
 CAPM é um modelo que calcula o retorno esperado de um ativo acima de um ativo "livre" de risco de mercado (geralmente um título público). Essa a taxa de retorno adicional é medido pelo coeficiente beta, de uma equação linear:
 
-$\small R_{Mercado} = R_{RiskFree} + \beta(R_{Asset} - R_{RiskFree})$
+$\small R_{Asset} = R_{RiskFree} + \beta(R_{Mercado} - R_{RiskFree})$
 
 No presente trabalho, serão realizadas diferentes metodologias para determinação do coeficiente $\beta$.
 
@@ -65,25 +59,21 @@ No presente trabalho, serão realizadas diferentes metodologias para determinaç
 
 ## Metodologia 1: Regressão Linear
 
-Analisando bem a equação de CAPM, é possível ver uma similaridade com uma equação conhecida. 
-Substitua o $R_{Mercado}$ por um $y$. Agora, substitua o $\small R_{RiskFree}$ por um $b$, o $\beta$ por um $a$ e o $\small (R_{Asset} - R_{RiskFree})$ por um $x$. Após essas substituições, temos a seguinte equação:
+O modelo se basea numa equação linear.
 
-$\small R_{Mercado} = R_{RiskFree} + \beta(R_{Asset} - R_{RiskFree}) => y = b + ax$.
+$y = b + ax$.
 
-Essa equação talvez se apresente mais familiar: equação de primeiro grau (grau 1 e ordem 1) ou equação linear de ordem 1. 
+Nesse modelo o $\beta$ é um valor constante para toda a série de retornos.
 
-Por ser uma equação linear do tipo $\small y = b + ax$, a primeira metodologia que surge é a de uma regressão linear.
+Na análise feita aqui, não foi utilizado o excesso retorno ($(R_{Mercado} - R_{RiskFree})$) e sim o retorno de mercado $R_{Mercado}$.
 
-Para tal podemos utilizar algumas metodologias para definir o coeficiente $\beta$, dado que os demais dados são dados conhecidos:
+A regressão linear é suficiente para poder definir o $\beta$.
 
-- $\small R_{RiskFree}$ = Retorno de um ativo de 'livre' de risco
-- $\small R_{Mercado}$ = Retorno
-- $\small R_{Asset}$ = Retorno do Ativo (ou carteira) a ser investido
+Entretanto, fica a pergunta: esse $\beta$ é sempre igual ao longo do tempo?
 
-A regressão linear é suficiente para poder definir essa $\beta$. Entretanto, fica a pergunta: esse $\beta$ é sempre igual ao longo do tempo?
 Resposta: **Não**.
 
-Serão então apresentados a seguir outros métodos para definição desse coeficiente.
+Portanto, serão apresentados a seguir outros métodos para definição desse coeficiente.
 
 ## Modelo Iterativo
 
@@ -106,9 +96,9 @@ Na próxima iteração a 'janela' de $\small m$ dias é deslocada em 1 dia e um 
 
 Esse processo é repetido até que a amostra dos últimos $\small m$ dias seja utilizada.
 
-Desta forma, são estimados os $\beta s$ que 'variam ao longo do tempo', sempre com amostras distintas entre si, levando assim a .
+Desta forma, são estimados os $\beta s$ que 'variam ao longo do tempo', sempre com amostras distintas entre si.
 
-##### Rolling Window Example^2^
+##### Rolling Window Example ^2^
 
 ```{r fig.align = 'center'}
 
@@ -129,7 +119,7 @@ Seguindo a mesma lógica, são feitas então as demais iterações, onde a cada 
 
 Um fato relevante é que na última amostra, todos os dados da série são usados e portanto esse último $\beta$ é igual ao $\beta$ do Modelo Linear Estático. Sendo assim, ao plotar um gráfico de $\small dias$ vs. $\beta$ + linha $\beta_{estático}$, ver-se-á um gráfico onde o $\beta$ tende a se aproximar cada vez mais do valor estático ao final da série.
 
-##### Expanding Window Example^2^
+##### Expanding Window Example [^2^]
 
 ```{r fig.align = 'center'}
 # print("Expanding Window Example")
@@ -139,7 +129,7 @@ knitr::include_graphics("Expanding2.PNG")
 
 <!-- ![Exemplo Gráfico de Expanding Window ^2^](Expanding2.PNG){width=50%} -->
 
-^2^Imagens retiradas de: https://eng.uber.com/backtesting-at-scale/
+^2^ Imagens retiradas de: https://eng.uber.com/backtesting-at-scale/
 Colocar ações de antes de 2007
 
 ## Betas Variantes no tempo (Time-Varying Betas) {.smaller}
@@ -161,15 +151,43 @@ Que permite isolar a covariância e calculá-la com base nas variâncias combina
 
 $\small Cov(x_t , y_t) = {Var(x_t + y_t) − Var(x_t − y_t) \over 4}$
 
-Dado que a volatilidade $\sigma_{x,t}$ é dada pela $\sqrt{var(x_t)}$ em um dado período, podemos então lançar mão de modelos GARCH para cálculo das variâncias ao longo do tempo e assim, calcular a Covariância. Aqui, será assumido um modelo GARCH(1,1).
+Dado que a volatilidade $\sigma_{x,t}$ é dada pela $\sqrt{var(x_t)}$ em um dado período, podemos então lançar mão de modelos GARCH para cálculo das variâncias ao longo do tempo e assim, calcular a Covariância. A determinação da ordem do GARCH é feita com testes de diferentes valores para m,n,modelo_GARCH(SGARCH e eGARCH),Distribuição_Erro (Normal e t-Student).
 
 De posse do valores de Covariância, temos então que calcular a Correlação entre $x_t$ e $y_t$.
 
-$\small Corr(x_t,y_t) = {Cov(x,y) \over Var(x)Var(y)} => Corr(x_t,y_t) = {Var(x_t + y_t) − Var(x_t − y_t) \over 4 \sqrt{Var(x)}\sqrt{Var(y)}}$
+$\small Corr(x_t,y_t) = {Cov(x,y) \over \sqrt{Var(x)}\sqrt{Var(y)}} => Corr(x_t,y_t) = {Var(x_t + y_t) − Var(x_t − y_t) \over 4 \sqrt{Var(x)}\sqrt{Var(y)}}$
+
+## DLM (Dynamic Linear Model)^3^
+
+O modelo DLM considera que seus parâmetros variam no tempo. Esse modelo é um caso particular do Modelo de Espaço de Estados, que considera especificação linear e perturbações normais.
+
+Para o modelo, considera-se a equação linear para modelos de espaço de estado, onde os estados atuais (Vetor $\theta_t$) dependem de uma combinação linear dos estados antecessores (Vetor $\theta_{t-1}$) acrescidos de um erro ($\omega_t$ - $N(0,W_t)$). A combinação linear dos estados é definida pela matriz ($G_t$). Desta forma, temos então a equação:
+
+$\theta_t=G_t\theta_{t-1}+\omega_t$
+
+Essa equação entretanto, utiliza os vetores de estado, que são diferentes dos valores observados, uma vez que esses últimos são compostos dos estados adicionados de um ruído. 
+Faz-se necessário definir então a equação que descreve os espaços de estado em relação ao vetor de observações.
+Essa definição é apresentada a seguir:
+
+- $y_t=F^T_t\theta_t+\upsilon_t$
+
+onde:
+
+- $y_t$ - Vetor de Observações
+
+- $F^T_t$ - Tranposta da Matriz combinação linear $F_t$
+
+- $\upsilon_t$ - ruído $N(0,V_t)$
+
+Para completar o modelo, é necessário definir um estado inicial ($\theta_0 \sim N(m_0,C_0)$) e as matrizes de Variância-Covariancia dos ruídos observado ($\upsilon_t \sim N(0,V_t)$) e estimado ($\omega_t \sim N(0,W_t)$)
+
+Uma vez definido o modelo, é necessário agora um algoritmo para resolvê-lo. Neste caso, será utilizado o Algoritmo do Filtro de Kalman.
+
+^3^ Definições adaptadas de: https://www.quantstart.com/articles/State-Space-Models-and-the-Kalman-Filter/
 
 ## Importando as cotações históricas
 
-As análises usaram 4 papéis negociados na bolsa brasileira B3 em relação ao título Tesouro Selic do Governo Federal. Os papéis são:
+As análises usaram 4 papéis negociados na bolsa brasileira B3 em relação ao indíce IBOVESPA (100 principais ações da Bovespa). Os papéis são:
 
 - Companhia Vale do Rio Doce - VALE3.SA
   - Companhia de Extração Mineral
@@ -188,28 +206,60 @@ require(scales)
 require(quantmod)
 require(tidyverse)
 require(ggplot2)
-require(Amelia)
-require(reshape2)
+# require(Amelia)
+# require(reshape2)
 require(ggthemes) 
 require(plyr)
-require(urca)
+# require(urca)
 require(forecast)
 require(tseries)
 require("fGarch")
 require("rugarch")
 require(fDMA)
-library(doParallel)
+# library(doParallel)
 library(xts)
-library(BETS)
-library(tibbletime)
+# library(BETS)
+# library(tibbletime)
 library(dplyr)
 library(kableExtra)
+library(repr)
+library(dlm)
 
 ```
 
+
+```{r funcoes}
+# Performance via Backtest
+back_teste <- function(tvp_beta,ativo,mercado,nome){
+  fitted = rep(NA, nrow(ativo))
+  erro = rep(NA, nrow(ativo))
+  
+  for (t in 1:nrow(ativo)){
+    fitted[t] = tvp_beta[t]*mercado[t]
+    erro[t]   = ativo[t] - fitted[t]
+  }
+  
+  MSE_beta_garch = mean(erro^2)
+  MAE_beta_garch = mean(abs(erro))
+
+  # MAE_rate <- MAE_beta_garch/MAE_est
+  # 
+  # MSE_rate <- MSE_beta_garch/MSE_est
+  # 
+  output <- matrix(c(MSE_beta_garch,MAE_beta_garch),2)
+
+  rownames(output) <- c("MSE","MAE")
+
+  colnames(output) <- nome
+    
+  return(output)
+}
+```
+
+
 ## Ações - Petrobrás
 
-```{r importando_petr}
+```{r importando_petr, cache=T}
 # Importando as ações
 petr <- importa_retorno('PETR4.SA')
 
@@ -233,7 +283,7 @@ plot(petr[[2]], main = 'Retorno PETR4.SA')
 
 ## Ações - Vale do Rio Doce
 
-```{r importando_vale}
+```{r importando_vale, cache=T}
 vale <- importa_retorno('VALE3.SA')
 
 summary(vale[[1]])
@@ -245,7 +295,7 @@ plot(vale[[2]], main = 'Retorno VALE3.SA')
 
 ## Ações - Via Varejo
 
-```{r importando_via_var}
+```{r importando_via_var, cache=T}
 vvar <- importa_retorno('VVAR3.SA')
 
 summary(vvar[[1]])
@@ -253,12 +303,13 @@ summary(vvar[[1]])
 par(mfrow = c(2,1))
 plot(vvar[[1]], main = 'Preço VVAR3.SA')
 plot(vvar[[2]], main = 'Retorno VVAR3.SA')
+
 ```
 
 
 ## Ações - CEMIG
 
-```{r importando_cemig}
+```{r importando_cemig, cache=T}
 cmig <- importa_retorno('CMIG4.SA')
 
 summary(cmig[[1]])
@@ -271,7 +322,7 @@ plot(cmig[[2]], main = 'Retorno CMIG4.SA')
 
 ## Ações - Ibovespa
 
-```{r importando_ibov}
+```{r importando_ibov, cache=T}
 ibov <- importa_retorno('^BVSP')
 
 summary(ibov[[1]])
@@ -284,6 +335,7 @@ plot(ibov[[2]], main = 'Retorno IBOVESPA')
 ```
 
 ## Calculando Beta Linear Estático - Petrobrás {.smaller}
+
 
 ```{r}
 # fazendo com que todas as séries tenham as mesmas datas
@@ -325,7 +377,7 @@ cmig_filtered <- cmig[[2]]
 ```{r r_est_petr, results=FALSE}
 
 # Filtrando somente pelas datas que existem nas duas séries
-titulos <- c('PETROBRAS','IBOVESPA','Modelo de Mercado')
+titulos <- c('PETROBRAS','IBOVESPA','Gráfico Aderência a Regressão')
 
 papel1 <- petr[[2]]
 papel2 <- ibov[[2]]
@@ -336,11 +388,19 @@ papel2_filtered <- datas_comuns(papel2,papel1)
 
 papel1_fit = lm(papel1_filtered ~ papel2_filtered)
 summary(papel1_fit)
+lm_petr <- papel1_fit
 
 beta_petr <- papel1_fit$coefficients[2]
 
 MSE_petr_estatico = mean((papel1_fit$fitted.values - papel1_filtered)^2)
 MAE_petr_estatico = mean(abs(papel1_fit$fitted.values - papel1_filtered))
+
+vet_back_test_est <- matrix()
+x <- matrix(c(MSE_petr_estatico,MAE_petr_estatico))
+colnames(x) <- 'PETR'
+rownames(x) <- c('MSE','MAE')
+vet_back_test_est <- x
+
 
 par(mfrow=c(1,1))
 plot(as.vector(papel2_filtered),as.vector(papel1_filtered),cex=0.8, col='darkblue',xlim = c(-0.15,0.1),ylim = c(-0.15,0.2),
@@ -351,13 +411,16 @@ abline(papel1_fit$coefficients, lwd=2)
 
 O valor do $\beta_{est_{petr}}$ é `r beta_petr`.
 
+MSE = `r MSE_petr_estatico`
+
+MAE = `r MAE_petr_estatico`
 
 ## Calculando Beta Linear Estático - Vale {.smaller}
 
 ```{r r_est_vale, results=FALSE}
 
 # Filtrando somente pelas datas que existem nas duas séries
-titulos <- c('VALE','IBOVESPA','Modelo de Mercado')
+titulos <- c('VALE','IBOVESPA','Gráfico Aderência a Regressão')
 
 papel1 <- vale[[2]]
 papel2 <- ibov[[2]]
@@ -367,11 +430,17 @@ papel2_filtered <- datas_comuns(papel2,papel1)
 
 papel1_fit = lm(papel1_filtered ~ papel2_filtered)
 summary(papel1_fit)
+lm_vale <- papel1_fit
 
 beta_vale <- papel1_fit$coefficients[2]
 
 MSE_vale_estatico = mean((papel1_fit$fitted.values - papel1_filtered)^2)
 MAE_vale_estatico = mean(abs(papel1_fit$fitted.values - papel1_filtered))
+
+x <- matrix(c(MSE_vale_estatico,MAE_vale_estatico))
+colnames(x) <- 'VALE'
+rownames(x) <- c('MSE','MAE')
+vet_back_test_est <- vet_back_test_est %>% cbind(x)
 
 par(mfrow=c(1,1))
 plot(as.vector(papel2_filtered),as.vector(papel1_filtered),cex=0.8, col='darkblue',xlim = c(-0.15,0.1),ylim = c(-0.15,0.2),
@@ -382,12 +451,16 @@ abline(papel1_fit$coefficients, lwd=2)
 
 O valor do $\beta_{est_{vale}}$ é `r beta_vale`.
 
+MSE = `r MSE_vale_estatico`
+
+MAE = `r MAE_vale_estatico`
+
 ## Calculando Beta Linear Estático - Via Varejo {.smaller}
 
 ```{r r_est_vvar, results=FALSE}
 
 # Filtrando somente pelas datas que existem nas duas séries
-titulos <- c('VIA VAREJO','IBOVESPA','Modelo de Mercado')
+titulos <- c('VIA VAREJO','IBOVESPA','Gráfico Aderência a Regressão')
 
 papel1 <- vvar[[2]]
 papel2 <- ibov[[2]]
@@ -397,11 +470,17 @@ papel2_filtered <- datas_comuns(papel2,papel1)
 
 papel1_fit = lm(papel1_filtered ~ papel2_filtered)
 summary(papel1_fit)
+lm_vvar <- papel1_fit
 
 beta_vvar <- papel1_fit$coefficients[2]
 
 MSE_vvar_estatico = mean((papel1_fit$fitted.values - papel1_filtered)^2)
 MAE_vvar_estatico = mean(abs(papel1_fit$fitted.values - papel1_filtered))
+
+x <- matrix(c(MSE_vvar_estatico,MAE_vvar_estatico))
+colnames(x) <- 'VVAR'
+rownames(x) <- c('MSE','MAE')
+vet_back_test_est <- vet_back_test_est %>% cbind(x)
 
 par(mfrow=c(1,1))
 plot(as.vector(papel2_filtered),as.vector(papel1_filtered),cex=0.8, col='darkblue',xlim = c(-0.15,0.1),ylim = c(-0.15,0.2),
@@ -412,13 +491,17 @@ abline(papel1_fit$coefficients, lwd=2)
 
 O valor do $\beta_{est_{vvar}}$ é `r beta_vvar`.
 
+MSE = `r MSE_vvar_estatico`
+
+MAE = `r MAE_vvar_estatico`
+
 
 ## Calculando Beta Linear Estático - Cemig {.smaller}
 
 ```{r r_est_cemig, results=FALSE}
 
 # Filtrando somente pelas datas que existem nas duas séries
-titulos <- c('CEMIG','IBOVESPA','Modelo de Mercado')
+titulos <- c('CEMIG','IBOVESPA','Gráfico Aderência a Regressão')
 
 papel1 <- cmig[[2]]
 papel2 <- ibov[[2]]
@@ -428,11 +511,17 @@ papel2_filtered <- datas_comuns(papel2,papel1)
 
 papel1_fit = lm(papel1_filtered ~ papel2_filtered)
 summary(papel1_fit)
+lm_cmig <- papel1_fit
 
 beta_cmig <- papel1_fit$coefficients[2]
 
 MSE_cmig_estatico = mean((papel1_fit$fitted.values - papel1_filtered)^2)
 MAE_cmig_estatico = mean(abs(papel1_fit$fitted.values - papel1_filtered))
+
+x <- matrix(c(MSE_cmig_estatico,MAE_cmig_estatico))
+colnames(x) <- 'CMIG'
+rownames(x) <- c('MSE','MAE')
+vet_back_test_est <- vet_back_test_est %>% cbind(x)
 
 par(mfrow=c(1,1))
 plot(as.vector(papel2_filtered),as.vector(papel1_filtered),cex=0.8, col='darkblue',xlim = c(-0.15,0.1),ylim = c(-0.15,0.2),
@@ -443,7 +532,11 @@ abline(papel1_fit$coefficients, lwd=2)
 
 O valor do $\beta_{est_{cmig}}$ é `r beta_cmig`.
 
-## Betas Lineares Estáticos - Resumo
+MSE = `r MSE_cmig_estatico`
+
+MAE = `r MAE_cmig_estatico`
+
+## Betas e erros Lineares Estáticos - Resumo
 
 ```{r resumo_betas}
 
@@ -451,23 +544,31 @@ betas <- tibble(Petrobras = round(beta_petr,3),
                 Vale = round(beta_vale,3),
                 Via_Varejo = round(beta_vvar,3),
                 Cemig = round(beta_cmig,3))
+
+betas <- betas %>% bind_rows(tibble(Petrobras = vet_back_test_est[,1]*100,
+                                    Vale = vet_back_test_est[,2]*100,
+                                    Via_Varejo = vet_back_test_est[,3]*100,
+                                    Cemig = vet_back_test_est[,4]*100))
+
+rownames(betas) <- c('Beta','MSEx100','MAEx100')
                                                                                
-betas %>% kbl() %>% kable_styling()
+betas %>% round(3) %>% kbl() %>% kable_styling()
+
+# vet_back_test_est %>% kbl() %>% kable_styling()
 
 # DT::datatable(betas)
 
 ```
 
-ANALISAR
+As ações da Petrobrás e Vale apresentaram $\beta s$ maiores que 1, o que denota um risco mais elevado que o do IBOVESPA, enquanto os $\beta s$ da Via Varejo e CEMIG, apresentam um risco menor que o IBOVESPA, dado que possuem valores menores que 1.
 
 
 ## Calculando Beta Linear Iterativo (Rolling Window)
 
-```{r roling, cache=TRUE}
+```{r roling, cache=T}
 
 init = round(nrow(ibov_filtered)/2, 0)
 out = nrow(ibov_filtered) - init
-
 
 betas_rol = tibble(Petr = NA, Vale = NA, VVar = NA, CMIG = NA)
 for (t in 1:out){
@@ -477,10 +578,10 @@ for (t in 1:out){
   cmig_fit2 = lm(cmig_filtered[t:(init+t)] ~ ibov_filtered[t:(init+t)])
 
   betas_rol = betas_rol %>% bind_rows(
-                                      tibble(Petr = petr_fit2$coefficients[2],
-                                             Vale = vale_fit2$coefficients[2],
-                                             VVar = vvar_fit2$coefficients[2],
-                                             CMIG = cmig_fit2$coefficients[2])
+                                      tibble(Petr = petr_fit2$coefficients[2] %>% round(digits = 3),
+                                             Vale = vale_fit2$coefficients[2] %>% round(digits = 3),
+                                             VVar = vvar_fit2$coefficients[2] %>% round(digits = 3),
+                                             CMIG = cmig_fit2$coefficients[2] %>% round(digits = 3))
                                       )
 
 }
@@ -490,10 +591,10 @@ betas_rol <- betas_rol %>% na.omit()
 betas_rol_mat <- matrix(c(betas_rol$Petr,betas_rol$Vale,betas_rol$VVar,betas_rol$CMIG), ncol = 4)
 
 plot.ts(betas_rol_mat, col=1:4, lwd=2, ylim=c(0,2), main='Rolling Betas',ylab = "Beta", plot.type = 'single')
-abline(h=betas$Petrobras, col=1, lty=2)
-abline(h=betas$Vale, col=2, lty=2)
-abline(h=betas$Via_Varejo, col=3, lty=2)
-abline(h=betas$Cemig, col=4, lty=2)
+abline(h=betas$Petrobras[1], col=1, lty=2)
+abline(h=betas$Vale[1], col=2, lty=2)
+abline(h=betas$Via_Varejo[1], col=3, lty=2)
+abline(h=betas$Cemig[1], col=4, lty=2)
 abline(h=1, col='gray', lty=1)
 legend("bottom", col=1:4, lty=1,
        legend=c('Petrobrás','Vale','Via Varejo','CEMIG'),
@@ -507,8 +608,10 @@ plot.ts(betas_rol_mat[,1], col=1, lwd=2,
         main='Petrobras',
         ylab = "Beta",
      xy.lines = F) 
-abline(h=betas$Petrobras, col=2, lty=4, lwd = 3)
+abline(h=betas$Petrobras[1], col=2, lty=4, lwd = 3)
 abline(h=1, col='gray', lty=1)
+
+
 
 
 plot.ts(betas_rol_mat[,2], col=1, lwd=2, 
@@ -516,34 +619,81 @@ plot.ts(betas_rol_mat[,2], col=1, lwd=2,
                max(betas_rol_mat[,2],betas$Vale)*1.1), 
         main='Vale',
         ylab = "Beta")
-abline(h=betas$Vale, col='red', lty=2)
+abline(h=betas$Vale[1], col='red', lty=2)
 abline(h=1, col='gray', lty=1)
-# legend("bottom", col=1, lty=1,
-#        legend=c('Vale'),
-#        lwd = 2, cex=0.6, box.lty=2)
+
 
 plot.ts(betas_rol_mat[,3], col=1, lwd=2,
         ylim=c(min(betas_rol_mat[,3],betas$Via_Varejo)*0.9,
                max(betas_rol_mat[,3],betas$Via_Varejo)*1.1), 
         main='Via Varejo',
         ylab = "Beta") 
-abline(h=betas$Via_Varejo, col='red', lty=2)
+abline(h=betas$Via_Varejo[1], col='red', lty=2)
 abline(h=1, col='gray', lty=1)
-# legend("bottom", col=1, lty=1,
-#        legend=c('Via Varejo'),
-#        lwd = 2, cex=0.6, box.lty=2)
+
 
 plot.ts(betas_rol_mat[,4], col=1, lwd=2, 
         ylim=c(min(betas_rol_mat[,4],betas$Cemig)*0.9,
                max(betas_rol_mat[,4],betas$Cemig)*1.1), 
         main='Cemig',
         ylab = "Beta") 
-abline(h=betas$Cemig, col='red', lty=2)
+abline(h=betas$Cemig[1], col='red', lty=2)
 abline(h=1, col='gray', lty=1)
-# legend("bottom", col=1, lty=1,
-#        legend=c('CEMIG'),
-#        lwd = 2, cex=0.6, box.lty=2)
+
+# Back Test Rolling - PETR,VALE,VVAR e CMIG
+vet_back_test_rol <- matrix()
+data_inic <- index(petr_filtered[init+1])
+vet_back_test_rol <- back_teste(tvp_beta = betas_rol_mat[,1],
+                                ativo = window(petr_filtered,start = data_inic),
+                                mercado = window(ibov_filtered,start = data_inic),
+                                nome = "PETR")
+
+vet_back_test_rol <- vet_back_test_rol %>% cbind(back_teste(tvp_beta = betas_rol_mat[,2],
+                                                            ativo = window(vale_filtered,start = data_inic),
+                                                            mercado = window(ibov_filtered,start = data_inic),
+                                                            nome = "VALE"))
+
+
+vet_back_test_rol <- vet_back_test_rol %>% cbind(back_teste(tvp_beta = betas_rol_mat[,3],
+                                                            ativo = window(vvar_filtered,start = data_inic),
+                                                            mercado = window(ibov_filtered,start = data_inic),
+                                                            nome = "VVAR"))
+
+vet_back_test_rol <- vet_back_test_rol %>% cbind(back_teste(tvp_beta = betas_rol_mat[,4],
+                                                            ativo = window(cmig_filtered,start = data_inic),
+                                                            mercado = window(ibov_filtered,start = data_inic),
+                                                            nome = "CMIG"))
+
 ```
+
+## Comparação dos resultados (Rolling x Estático) {.smaller}
+
+A tabela abaixo, apresenta a propoção do erro do Modelo Rolling Window em relação ao Modelo Estático. Para essa comparação foram usadas 2 métricas:
+
+- MSE: Mean Square Error
+- MAE: Mean Absolute Error
+
+A proporção foi calculada dividindo o valor obtido no modelo Rolling dividido pelo valor obtido no modelo estático:
+
+$MSE={MSE_{Rolling} \over MSE_{Estático}}$
+
+$MAE={MAE_{Rolling} \over MAE_{Estático}}$
+
+```{r roling_summary}
+rol_est <- matrix(data = NA,nrow = 2,ncol = 4)
+colnames(rol_est) <- c('PETR','VALE','VVAR','CMIG')
+rownames(rol_est) <- c('MSE_ROL_EST','MAE_ROL_EST')
+
+for (i in 1:4){
+  for (j in 1:2){
+    rol_est[j,i] <- round(vet_back_test_rol[j,i]/vet_back_test_est[j,i],3)
+  }
+}
+
+rol_est %>% kbl() %>% kable_styling()
+
+```
+
 
 ## Calculando Beta Linear Iterativo (Expanding Window)
 
@@ -587,10 +737,10 @@ betas_exp_mat <- matrix(c(betas_exp$Petr,betas_exp$Vale,betas_exp$VVar,betas_exp
 # betas_exp_mat <- xts(zoo(betas_exp_mat,as.Date(index(cmig_filtered))),order.by = as.Date(index(cmig_filtered)))
 
 plot.ts(betas_exp_mat, col=1:4, lwd=2, ylim=c(0,2), main='Rolling Betas',ylab = "Beta",plot.type = "single")
-abline(h=betas$Petrobras, col=1, lty=2)
-abline(h=betas$Vale, col=2, lty=2)
-abline(h=betas$Via_Varejo, col=3, lty=2)
-abline(h=betas$Cemig, col=4, lty=2)
+abline(h=betas$Petrobras[1], col=1, lty=2)
+abline(h=betas$Vale[1], col=2, lty=2)
+abline(h=betas$Via_Varejo[1], col=3, lty=2)
+abline(h=betas$Cemig[1], col=4, lty=2)
 abline(h=1, col='gray', lty=1)
 legend("bottom", col=1:4, lty=1,
        legend=c('Petrobrás','Vale','Via Varejo','CEMIG'),
@@ -602,7 +752,7 @@ plot.ts(betas_exp_mat[,1], col=1, lwd=2,
                max(betas_exp_mat[,1],betas$Petrobras)*1.1), 
         main='Petrobras',
         ylab = "Beta") 
-abline(h=betas$Petrobras, col='red', lty=2)
+abline(h=betas$Petrobras[1], col='red', lty=2)
 abline(h=1, col='gray', lty=1)
 
 
@@ -611,7 +761,7 @@ plot.ts(betas_exp_mat[,2], col=1, lwd=2,
                max(betas_exp_mat[,2],betas$Vale)*1.1), 
         main='Vale',
         ylab = "Beta")
-abline(h=betas$Vale, col='red', lty=2)
+abline(h=betas$Vale[1], col='red', lty=2)
 abline(h=1, col='gray', lty=1)
 # legend("bottom", col=1, lty=1,
 #        legend=c('Vale'),
@@ -622,7 +772,7 @@ plot.ts(betas_exp_mat[,3], col=1, lwd=2,
                max(betas_exp_mat[,3],betas$Via_Varejo)*1.1), 
         main='Via Varejo',
         ylab = "Beta") 
-abline(h=betas$Via_Varejo, col='red', lty=2)
+abline(h=betas$Via_Varejo[1], col='red', lty=2)
 abline(h=1, col='gray', lty=1)
 # legend("bottom", col=1, lty=1,
 #        legend=c('Via Varejo'),
@@ -633,27 +783,67 @@ plot.ts(betas_exp_mat[,4], col=1, lwd=2,
                max(betas_exp_mat[,4],betas$Cemig)*1.1), 
         main='Cemig',
         ylab = "Beta") 
-abline(h=betas$Cemig, col='red', lty=2)
+abline(h=betas$Cemig[1], col='red', lty=2)
 abline(h=1, col='gray', lty=1)
-# legend("bottom", col=1, lty=1,
-#        legend=c('CEMIG'),
-#        lwd = 2, cex=0.6, box.lty=2)
+
+
+# Back Test Expanding - PETR,VALE,VVAR e CMIG
+vet_back_test_exp <- matrix()
+data_inic <- index(petr_filtered[init+1])
+vet_back_test_exp <- back_teste(tvp_beta = betas_exp_mat[,1],
+                                ativo = window(petr_filtered,start = data_inic),
+                                mercado = window(ibov_filtered,start = data_inic),
+                                nome = "PETR")
+
+
+vet_back_test_exp <- vet_back_test_exp %>% cbind(back_teste(tvp_beta = betas_exp_mat[,2],
+                                                            ativo = window(vale_filtered,start = data_inic),
+                                                            mercado = window(ibov_filtered,start = data_inic),
+                                                            nome = "VALE"))
+
+vet_back_test_exp <- vet_back_test_exp %>% cbind(back_teste(tvp_beta = betas_exp_mat[,3],
+                                                            ativo = window(vvar_filtered,start = data_inic),
+                                                            mercado = window(ibov_filtered,start = data_inic),
+                                                            nome = "VVAR"))
+
+vet_back_test_exp <- vet_back_test_exp %>% cbind(back_teste(tvp_beta = betas_exp_mat[,4],
+                                                            ativo = window(cmig_filtered,start = data_inic),
+                                                            mercado = window(ibov_filtered,start = data_inic),
+                                                            nome = "CMIG"))
+
 ```
 
-## Correlações
 
-```{r}
+## Comparação dos resultados (Expanding x Estático) {.smaller}
 
-cor(petr_filtered,ibov_filtered)
-cor(vale_filtered,ibov_filtered)
-cor(vvar_filtered,ibov_filtered)
-cor(cmig_filtered,ibov_filtered)
+A tabela abaixo, apresenta a propoção do erro do Modelo Expanding Window em relação ao Modelo Estático. Para essa comparação foram usadas 2 métricas:
+
+- MSE: Mean Square Error
+- MAE: Mean Absolute Error
+
+A proporção foi calculada dividindo o valor obtido no modelo Expanding dividido pelo valor obtido no modelo estático
+
+$MSE={MSE_{Expanding} \over MSE_{Estático}}$
+
+$MAE={MAE_{Expanding} \over MAE_{Estático}}$
+
+```{r expanding_summary}
+exp_est <- matrix(data = NA,nrow = 2,ncol = 4)
+colnames(exp_est) <- c('PETR','VALE','VVAR','CMIG')
+rownames(exp_est) <- c('MSE_EXP_EST','MAE_EXP_EST')
+
+for (i in 1:4){
+  for (j in 1:2){
+    exp_est[j,i] <- round(vet_back_test_exp[j,i]/vet_back_test_est[j,i],3)
+  }
+}
+
+exp_est %>% kbl() %>% kable_styling()
 
 ```
 
 
-
-## CAPM com modelo de volatilidade
+## Timing Varying Betas (TVB) - CAPM com modelo de volatilidade
 
 ```{r CAPM, cache=TRUE}
 # Buscando efeito ARMA
@@ -709,7 +899,7 @@ specs_vale_menos = list()
 specs_vvar_menos = list()
 specs_cmig_menos = list()
 
-n <- 256
+n <- 16
 
 BICs_petr_mais = matrix(NA, n, 5)
 colnames(BICs_petr_mais) = c('Arch-Order', 'Garch-Order','Model', 'Distr.', 'BIC')
@@ -877,7 +1067,7 @@ best_cmig_menos <- which(BICs_cmig_menos[,5] == min(BICs_cmig_menos[(1:row_end),
 ```
 
 
-```{r CAPM2}
+```{r CAPM2, fig.width = 12,fig.height = 7}
 # BICs_petr[best_petr,]
 # BICs_vale_mais[best_vale_mais,]
 # BICs_vale_menos[best_vale_menos,]
@@ -996,46 +1186,22 @@ tvp_beta_vale = (vale_mais - vale_menos)/(4*var_ibov)
 tvp_beta_vvar = (vvar_mais - vvar_menos)/(4*var_ibov)
 tvp_beta_cmig = (cmig_mais - cmig_menos)/(4*var_ibov)
 
-par(mfrow=c(1,1))
+par(mfrow=c(2,2))
+# options(repr.plot.width = 30, repr.plot.height = 18)
+# par("fin") (30, 20)
 ts.plot(tvp_beta_petr, col=1, ylab='Beta', main='Time-Varying Beta - Petrobrás', lwd=1)
-abline(h=betas$Petrobras, lty=2, lwd=2, col=1)
+abline(h=betas$Petrobras[1], lty=2, lwd=2, col=1)
 
 ts.plot(tvp_beta_vale, col=2, ylab='Beta', main='Time-Varying Beta - Vale', lwd=1)
-abline(h=betas$Vale, lty=2, lwd=2, col=2)
+abline(h=betas$Vale[1], lty=2, lwd=2, col=2)
 
 ts.plot(tvp_beta_vvar, col=3, ylab='Beta', main='Time-Varying Beta - Via Varejo', lwd=1, ylim = c(-5,5))
-abline(h=betas$Via_Varejo, lty=2, lwd=2, col=3)
+abline(h=betas$Via_Varejo[1], lty=2, lwd=2, col=3)
 
 ts.plot(tvp_beta_cmig, col=4, ylab='Beta', main='Time-Varying Beta - CEMIG', lwd=1)
-abline(h=betas$Cemig, lty=2, lwd=2, col=4)
+abline(h=betas$Cemig[1], lty=2, lwd=2, col=4)
 
 
-
-# Performance via Backtest
-back_teste <- function(tvp_beta,ativo,mercado,MSE_est,MAE_est,nome){
-  fitted = rep(NA, nrow(ativo))
-  erro = rep(NA, nrow(ativo))
-  
-  for (t in 1:nrow(ativo)){
-    fitted[t] = tvp_beta[t]*mercado[t]
-    erro[t]   = ativo[t] - fitted[t]
-  }
-  
-  MSE_beta_garch = mean(erro^2)
-  MAE_beta_garch = mean(abs(erro))
-
-  MAE_rate <- MAE_beta_garch/MAE_est
-
-  MSE_rate <- MSE_beta_garch/MSE_est
-  
-  output <- matrix(c(MSE_rate,MAE_rate),2)
-  
-  rownames(output) <- c("MSE","MAE")
-  
-  colnames(output) <- nome
-    
-  return(output)
-}
 
 
 # tvp_beta <- tvp_beta_vale
@@ -1074,31 +1240,21 @@ vet_back_test <- matrix()
 vet_back_test <- back_teste(tvp_beta_petr,
                             petr_filtered,
                             ibov_filtered,
-                            MSE_petr_estatico,
-                            MAE_petr_estatico,
                             "PETR")
 
 vet_back_test <- vet_back_test %>% cbind(back_teste(tvp_beta_vale,
                                vale_filtered,
                                ibov_filtered,
-                               MSE_vale_estatico,
-                               MAE_vale_estatico,
                                "VALE"))
-
 
 vet_back_test <- vet_back_test %>% cbind(back_teste(tvp_beta_vvar,
                                vvar_filtered,
                                ibov_filtered,
-                               MSE_vvar_estatico,
-                               MAE_vvar_estatico,
                                "VVAR"))
-
 
 vet_back_test <- vet_back_test %>% cbind(back_teste(tvp_beta_cmig,
                                cmig_filtered,
                                ibov_filtered,
-                               MSE_cmig_estatico,
-                               MAE_cmig_estatico,
                                "CMIG"))
 
 # betas <- tibble(Petrobras = round(beta_petr,3),
@@ -1108,28 +1264,414 @@ vet_back_test <- vet_back_test %>% cbind(back_teste(tvp_beta_cmig,
 ```
 
 
-## Comparação dos resultados (Estático x Dinâmico)
+## Comparação dos resultados (TVB x Estático) {.smaller}
 
-A tabela abaixo, apresenta a propoção do erro do Modelo Dinâmico em relação ao Modelo Estático. Para essa comparação foram usadas 2 métricas:
+A tabela abaixo, apresenta a propoção do erro do Modelo TVB em relação ao Modelo Estático. Para essa comparação foram usadas 2 métricas:
 
 - MSE: Mean Square Error
 - MAE: Mean Absolute Error
 
-A propoção foi calculada dividindo o valor obtido no modelo dinâmico dividido pelo valor obtido no modelo estático
-$MSE={MSE_{Dinâmico} \over MSE_{Estático}}$
-  
-$MAE={MAE_{Dinâmico} \over MAE_{Estático}}$
+A proporção foi calculada dividindo o valor obtido no modelo TVB dividido pelo valor obtido no modelo estático
 
-```{r CAPM3}
+$MSE={MSE_{TVB} \over MSE_{Estático}}$|                e                |$MAE={MAE_{TVB} \over MAE_{Estático}}$
+
+```{r CAPM_Summary}
 # DT::datatable(vet_back_test)
 
-vet_back_test %>% kbl() %>% kable_styling()
+tvb_est <- matrix(data = NA,nrow = 2,ncol = 4)
+colnames(tvb_est) <- c('PETR','VALE','VVAR','CMIG')
+rownames(tvb_est) <- c('MSE_TVB_EST','MAE_TVB_EST')
+
+for (i in 1:4){
+  for (j in 1:2){
+    tvb_est[j,i] <- round(vet_back_test[j,i]/vet_back_test_est[j,i],3)
+  }
+}
+
+tvb_est %>% kbl() %>% kable_styling()
 
 ```
 Ações que indicam mudança de risco da empresa ao longo do tempo:
+
 - Petrobras: melhor desempenho do modelo Beta dinâmico em relação ao Beta estático
+
 - Via Varejo: possui uma melhora no erro do backtest, mas bem menos significativo
 
 Ações que o Beta varia com menos intensidade ao longo do tempo e o Beta estático produz resultado semelhante no longo prazo:
+
 - Vale do Rio Doce
+
 - Cemig
+
+
+## DLM - Petrobrás
+
+### Modelo Normal e Suavizado
+
+```{r DLM_petr, cache=T, fig.width=12,fig.height=7}
+buildCapm <- function(parametros) {
+  
+  dlmModReg(ibov_filtered, dV = exp(parametros[1]), dW = exp(parametros[2 : 3]))
+  
+}
+
+acao <- petr_filtered
+
+outMLE <- dlmMLE(acao, parm = rep(0, 3), buildCapm)
+
+model <- buildCapm(parametros = outMLE$par)
+
+
+model_filtered = dlmFilter(acao,model)
+
+outS <- dlmSmooth(acao, model)
+# Gráficos Normais
+par(mfrow=c(2,2))
+ts.plot(dropFirst(model_filtered$m[,1]), ylab='', main=expression(alpha[t]),lwd=2, col=2)
+abline(h=lm_petr$coefficientes[1], lty=2)
+
+ts.plot(dropFirst(model_filtered$m[,2]), ylab='',main=expression(beta[t]), lwd=2, col=4)
+abline(h=lm_petr$coefficients[2], lty=2)
+
+# Gráfico Suavizado
+# par(mfrow=c(1,1))
+ts.plot(dropFirst(outS$s[,1]), ylab='', main=expression(alpha[t]),lwd=2, col=2)
+abline(h=lm_petr$coefficients[1], lty=2)
+# abline(h=estatico$coefficients[1], lty=2)
+
+
+
+ts.plot(dropFirst(outS$s[,2]), ylab='',main=expression(beta[t]), lwd=2, col=4)
+abline(h=lm_petr$coefficients[2], lty=2)
+
+```
+
+```{r DLM_petr2, cache=T}
+
+
+
+# Backtest
+forecast = model_filtered$f
+
+# MSE e MAE
+mse_petr_kf = mean((forecast - petr_filtered)^2)
+mae_petr_kf = mean(abs(forecast - petr_filtered))
+
+vet_back_test_kf <- matrix()
+x <- matrix(c(mse_petr_kf,mae_petr_kf))
+colnames(x) <- 'PETR'
+rownames(x) <- c('MSE','MAE')
+vet_back_test_kf <- x
+
+# MSE_final<- matrix(c(vet_back_test[1,1]/MSE_petr_estatico,
+#                      mse_petr_kf/MSE_petr_estatico,
+#                      mse_petr_kf/vet_back_test[1,1]))
+# 
+# rownames(MSE_final) <- c("TVB/EST","DLM/EST","DLM/TVB")
+# 
+# colnames(MSE_final) <- "PETR-MSE"
+# 
+# MAE_final<- matrix(c(vet_back_test[2,1]/MAE_petr_estatico,
+#                      mae_petr_kf/MAE_petr_estatico,
+#                      mae_petr_kf/vet_back_test[2,1]))
+# 
+# rownames(MAE_final) <- c("TVB/EST","DLM/EST","DLM/TVB")
+# 
+# colnames(MAE_final) <- "PETR-MAE"
+
+# mse_petr_kf/MSE_petr_estatico
+
+# mae_petr_kf/MAE_petr_estatico
+
+
+
+```
+
+
+
+## DLM - Vale
+
+### Modelo Normal e Suavizado
+
+```{r DLM_vale, cache=T,fig.width=12,fig.height=7}
+acao <- vale_filtered
+
+outMLE <- dlmMLE(acao, parm = rep(0, 3), buildCapm)
+
+
+model <- buildCapm(outMLE$par)
+
+
+model_filtered = dlmFilter(acao,model)
+
+outS <- dlmSmooth(acao, model)
+# Graficos Normais
+par(mfrow=c(2,2))
+ts.plot(dropFirst(model_filtered$m[,1]), ylab='', main=expression(alpha[t]),lwd=2, col=2)
+abline(h=lm_vale$coefficients[1], lty=2)
+
+ts.plot(dropFirst(model_filtered$m[,2]), ylab='',main=expression(beta[t]), lwd=2, col=4)
+abline(h=lm_vale$coefficients[2], lty=2)
+
+# Gráfico Suavizado
+# par(mfrow=c(1,1))
+ts.plot(dropFirst(outS$s[,1]), ylab='', main=expression(alpha[t]),lwd=2, col=2)
+abline(h=lm_vale$coefficients[1], lty=2)
+
+ts.plot(dropFirst(outS$s[,2]), ylab='',main=expression(beta[t]), lwd=2, col=4)
+abline(h=lm_vale$coefficients[2], lty=2)
+```
+
+
+```{r DLM_vale2, cache=T}
+
+
+# Backtest do CAPM 
+forecast = model_filtered$f
+
+# MSE e MAE
+mse_vale_kf = mean((forecast - vale_filtered)^2)
+mae_vale_kf = mean(abs(forecast - vale_filtered))
+
+x <- matrix(c(mse_vale_kf,mae_vale_kf))
+colnames(x) <- 'VALE'
+rownames(x) <- c('MSE','MAE')
+vet_back_test_kf <- vet_back_test_kf %>% cbind(x)
+
+# # Calculando racionais dos erros em relação ao estático
+# MSE_final<- MSE_final %>% cbind(c(vet_back_test[1,2]/MSE_vale_estatico,
+#                            mse_vale_kf/MSE_vale_estatico,
+#                            mse_vale_kf/vet_back_test[1,2]))
+# 
+# # rownames(MSE_final) <- c("TVB/EST","DLM/EST")
+# 
+# colnames(MSE_final) <- c("PETR-MSE", "VALE-MSE")
+# 
+# MAE_final <- MAE_final %>% cbind(c(vet_back_test[2,2]/MAE_vale_estatico,
+#                      mae_vale_kf/MAE_vale_estatico,
+#                      mae_vale_kf/vet_back_test[2,2]))
+# 
+# # rownames(MAE_final) <- c("TVB/EST","DLM/EST")
+# 
+# colnames(MAE_final) <- c("PETR-MAE", "VALE-MAE")
+
+
+
+```
+
+## DLM - Via Varejo
+
+### Modelo Normal e Suavizado
+
+```{r DLM_vvar, cache=T,fig.width=12,fig.height=7}
+acao <- vvar_filtered
+
+outMLE <- dlmMLE(acao, parm = rep(0, 3), buildCapm)
+
+
+model <- buildCapm(outMLE$par)
+
+
+model_filtered = dlmFilter(acao,model)
+
+
+outS <- dlmSmooth(acao, model)
+
+# Gráficos Normais
+par(mfrow=c(2,2))
+ts.plot(dropFirst(model_filtered$m[,1]), ylab='', main=expression(alpha[t]),lwd=2, col=2)
+abline(h=lm_vvar$coefficients[1], lty=2)
+
+ts.plot(dropFirst(model_filtered$m[,2]), ylab='',main=expression(beta[t]), lwd=2, col=4)
+abline(h=lm_vvar$coefficients[2], lty=2)
+
+# Graficos Suavizados
+ts.plot(dropFirst(outS$s[,1]), ylab='', main=expression(alpha[t]),lwd=2, col=2)
+abline(h=lm_vvar$coefficients[1], lty=2)
+
+ts.plot(dropFirst(outS$s[,2]), ylab='',main=expression(beta[t]), lwd=2, col=4)
+abline(h=lm_vvar$coefficients[2], lty=2)
+```
+
+```{r DLM_vvar2, cache=T}
+
+
+# Backtest
+
+forecast = model_filtered$f
+
+# MSE e MAE
+mse_vvar_kf = mean((forecast - vvar_filtered)^2)
+mae_vvar_kf = mean(abs(forecast - vvar_filtered))
+
+x <- matrix(c(mse_vvar_kf,mae_vvar_kf))
+colnames(x) <- 'VVAR'
+rownames(x) <- c('MSE','MAE')
+vet_back_test_kf <- vet_back_test_kf %>% cbind(x)
+
+# 
+# # Calculando racionais dos erros em relação ao estático
+# MSE_final<- MSE_final %>% cbind(c(vet_back_test[1,3]/MSE_vvar_estatico,
+#                            mse_vvar_kf/MSE_vvar_estatico,
+#                            mse_vvar_kf/vet_back_test[1,3]))
+# 
+# # rownames(MSE_final) <- c("TVB/EST","DLM/EST")
+# 
+# colnames(MSE_final) <- c("PETR-MSE", "VALE-MSE","VVAR-MSE")
+# 
+# MAE_final <- MAE_final %>% cbind(c(vet_back_test[2,3]/MAE_vvar_estatico,
+#                      mae_vvar_kf/MAE_vvar_estatico,
+#                      mae_vvar_kf/vet_back_test[2,3]))
+# 
+# # rownames(MAE_final) <- c("TVB/EST","DLM/EST")
+# 
+# colnames(MAE_final) <- c("PETR-MAE","VALE-MSE","VVAR-MAE")
+
+
+```
+
+## DLM - CEMIG
+
+### Modelo Normal e Suavizado
+
+```{r DLM_cmig, cache=T,fig.width=12,fig.height=7}
+acao <- cmig_filtered
+
+outMLE <- dlmMLE(acao, parm = rep(0, 3), buildCapm)
+
+model <- buildCapm(outMLE$par)
+
+model_filtered = dlmFilter(acao,model)
+
+
+outS <- dlmSmooth(acao, model)
+
+# Plotando gráfico normais
+par(mfrow=c(2,2))
+ts.plot(dropFirst(model_filtered$m[,1]), ylab='', main=expression(alpha[t]),lwd=2, col=2)
+abline(h=lm_cmig$coefficients[1], lty=2)
+
+ts.plot(dropFirst(model_filtered$m[,2]), ylab='',main=expression(beta[t]), lwd=2, col=4)
+abline(h=lm_cmig$coefficients[2], lty=2)
+
+  
+# Gráfico suavizados
+ts.plot(dropFirst(outS$s[,1]), ylab='', main=expression(alpha[t]),lwd=2, col=2)
+abline(h=lm_cmig$coefficients[1], lty=2)
+
+ts.plot(dropFirst(outS$s[,2]), ylab='',main=expression(beta[t]), lwd=2, col=4)
+abline(h=lm_cmig$coefficients[2], lty=2)
+```
+
+```{r DLM_cmig2, cache=T}
+
+
+# Backtest
+
+forecast = model_filtered$f
+
+# MSE e MAE
+mse_cmig_kf = mean((forecast - cmig_filtered)^2)
+mae_cmig_kf = mean(abs(forecast - cmig_filtered))
+
+x <- matrix(c(mse_cmig_kf,mae_cmig_kf))
+colnames(x) <- 'CMIG'
+rownames(x) <- c('MSE','MAE')
+vet_back_test_kf <- vet_back_test_kf %>% cbind(x)
+
+# # Calculando racionais dos erros em relação ao estático
+# MSE_final<- MSE_final %>% cbind(c(vet_back_test[1,4]/MSE_cmig_estatico,
+#                            mse_cmig_kf/MSE_cmig_estatico,
+#                            mse_cmig_kf/vet_back_test[1,4]))
+# 
+# # rownames(MSE_final) <- c("TVB/EST","DLM/EST")
+# 
+# colnames(MSE_final) <- c("PETR-MSE", "VALE-MSE","VVAR-MSE","CMIG-MSE")
+# 
+# MAE_final <- MAE_final %>% cbind(c(vet_back_test[2,4]/MAE_cmig_estatico,
+#                      mae_cmig_kf/MAE_cmig_estatico,
+#                      mae_cmig_kf/vet_back_test[2,4]))
+# 
+# # rownames(MAE_final) <- c("TVB/EST","DLM/EST")
+# 
+# colnames(MAE_final) <- c("PETR-MAE", '"VALE-MSE"',"VVAR-MAE", "CMIG-MSE")
+
+```
+
+## Comparação dos resultados (DLM x Estático) {.smaller}
+
+A tabela abaixo, apresenta a propoção do erro do Modelo DLM em relação ao Modelo Estático. Para essa comparação foram usadas 2 métricas:
+
+- MSE: Mean Square Error
+- MAE: Mean Absolute Error
+
+A proporção foi calculada dividindo o valor obtido no modelo DLM dividido pelo valor obtido no modelo estático
+
+$MSE={MSE_{DLM} \over MSE_{Estático}}$
+
+$MAE={MAE_{DLM} \over MAE_{Estático}}$
+
+```{r DLM_Summary}
+# DT::datatable(vet_back_test)
+
+dlm_est <- matrix(data = NA,nrow = 2,ncol = 4)
+colnames(dlm_est) <- c('PETR','VALE','VVAR','CMIG')
+rownames(dlm_est) <- c('MSE_DLM_EST','MAE_DLM_EST')
+
+for (i in 1:4){
+  for (j in 1:2){
+    dlm_est[j,i] <- vet_back_test_kf[j,i]/vet_back_test_est[j,i]
+  }
+}
+
+dlm_est %>% round(3) %>% kbl() %>% kable_styling()
+
+```
+
+## Resumo final dos Modelos
+
+Comparativo da performance dos modelos, buscando aquele que obteve melhor performance para cada ativo.
+
+```{r final_summary}
+# colnames(dlm_est) <- c('PETR','VALE','VVAR','CMIG')
+# rownames(dlm_est) <- c('MSE_DLM_EST','MAE_DLM_EST')
+
+mat_aux_acao <- data.frame(id = 1:4,
+                           acao = c('PETR','VALE','VVAR','CMIG'))
+mat_aux_erro <- data.frame(id = 1:2,
+                           erro = c('MSE','MAE'))
+mat_aux_modelo <- data.frame(id = 1:4,
+                             modelo = c('Rolling','Expanding','TVB','DLM'),
+                             valor = 0)
+
+# i <- 1
+# j <- 1
+resumo <- tibble(Acao = NA, Erro = NA, Melhor_Modelo = NA, Valor_sobre_Estatico = NA)
+#
+# mat_aux_modelo$valor <- c(rol_est[j,i], exp_est[j,i], tvb_est[j,i], dlm_est[j,i])
+# melhor <- min(mat_aux_modelo$valor)
+# resumo <- bind_rows(tibble(Acao = mat_aux_acao[mat_aux_acao$id == i,]$acao,
+#                            Erro = mat_aux_erro[mat_aux_erro$id == j,]$erro,
+#                            Melhor_Modelo = mat_aux_modelo[mat_aux_modelo$valor == melhor,]$modelo,
+#                            Valor_sobre_Estatico = melhor))
+
+for (i in 1:4){
+  for (j in 1:2){
+    mat_aux_modelo$valor <- c(rol_est[j,i], exp_est[j,i], tvb_est[j,i], dlm_est[j,i])
+    melhor <- min(mat_aux_modelo$valor)
+    resumo <- resumo %>% bind_rows(tibble(Acao = mat_aux_acao[mat_aux_acao$id == i,]$acao,
+                                          Erro = mat_aux_erro[mat_aux_erro$id == j,]$erro,
+                                          Melhor_Modelo = mat_aux_modelo[mat_aux_modelo$valor == melhor,]$modelo,
+                                          Valor_sobre_Estatico = round(melhor,3)))
+  }
+}
+
+
+
+resumo %>% na.omit() %>% kbl() %>% kable_styling()
+
+
+
+
+```
+
